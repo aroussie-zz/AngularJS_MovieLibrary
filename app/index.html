@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="myApp" class="no-js" xmlns:visibility="http://www.w3.org/1999/xhtml"
+      xmlns:appearence="http://www.w3.org/1999/xhtml"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Movie Library</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+
+    <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body ng-controller="MoviesController as movieCtrl">
+
+<div class="container" style="margin-bottom: 5%;">
+    <div class="row">
+        <div class="col-md-12 text-center title">
+            <h1><strong><u>Welcome in your Movie Library</u></strong></h1>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" ng-controller="SearchFormController as formCtrl">
+    <div class="row">
+
+        <div class="col-md-6" style="margin-left:1%; ">
+
+
+            <!-- This is the search bar -->
+            <div class="row" id="search">
+                <!-- The Search Bar -->
+                <form name="searchMovie" ng-submit="formCtrl.findMovie() && searchMovie.$valid" novalidate>
+                    <div class="row">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search a movie by Title" title="Search"
+                                   ng-model="formCtrl.title" required> </input>
+                            <span class="input-group-btn">
+                                   <input type="submit" class="btn btn-primary pull-right" value="Search"/>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+
+
+                <!-- This is the listView of the movie library of the user -->
+                <div class="row" id="movieLibrary">
+                    <div class="row" ng-hide="movieCtrl.movies.length">
+                        <h2> You don't have any movies yet</h2>
+                    </div>
+                    <div class="row" ng-show="movieCtrl.movies.length">
+                        <h2> You have {{movieCtrl.movies.length}} movie(s) in your library</h2>
+
+                        <table class="table" id="listOfMovies">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th class="title">Title</th>
+                                <th class="title">Year</th>
+                                <th class="title">Rate /5</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="movie in movieCtrl.movies" ng-click="formCtrl.showDetail(movie)">
+                                <td><img ng-src="{{movie.poster}}" width="100" height="150"></td>
+                                <td>{{movie.title}}</td>
+                                <td>{{movie.production_year}}</td>
+                                <td>{{movie.notes | number:2}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <!-- This is the view where we see the list of movies found -->
+                <div id="moviesFoundView" visibility: hidden>
+                    <!--If we don't find a movie, we display a message -->
+                    <h2 ng-hide="formCtrl.data.movies.length">No movies found </h2>
+                    <div ng-show="formCtrl.data.movies.length">
+
+                        <h2> Movie(s) found according to the title entered</h2>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th class="title">Title</th>
+                                <th class="title">Year</th>
+                                <th class="title">Rate / 5</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="movie in formCtrl.data.movies" ng-click="formCtrl.showDetail(movie)">
+                                <td><img ng-src="{{movie.poster}}" height="150" width="100"></td>
+                                <td>{{movie.title}}</td>
+                                <td>{{movie.production_year}}</td>
+                                <td>{{movie.notes.mean | number:2}}</td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <div class="col-md-offset-10 col-md-2 ">
+                        <input type="button" class="btn btn-danger" value="Back" ng-click="formCtrl.back()"/>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- This is the view Used to see the detail of a movie found -->
+        <div class="col-md-offset-1 col-md-4" ng-controller="FoundMovieDetails" id="showMovieDetail" visibility: hidden>
+
+            <form class="form form-inline" name="updateMovieForm"
+                  ng-submit="updateMovie(movie) && updateMovieForm.$valid" novalidate>
+                <div class="row" id="poster">
+                    <img ng-src="{{movie.poster}}" height="325" width="250">
+                </div>
+                <div class="row">
+                    <h3 class="title"> Title:</h3>
+                    {{movie.title}}
+                </div>
+
+                <div class="row">
+                    <h3 class="title"> Original Title:</h3>
+                    {{movie.original_title}}
+                </div>
+                <div class="row">
+                    <h3 class="title"> Director:</h3>
+                    {{movie.director}}
+                </div>
+                <div class="row">
+                    <h3 class="title"> Year:</h3>
+                    {{movie.production_year}}
+                </div>
+
+                <div class="row">
+                    <h3 class="title"> Official Rate:</h3>
+                    {{movie.notes.mean | number:2}}
+                    {{movie.notes | number:2}}
+                </div>
+
+                <!-- This is showed when the user clicked on a film of his movie Library -->
+                <!-- This is where the user can update his movie -->
+                <div class="row" ng-hide="movie.imdb_id">
+                    <div class="form-group">
+                        <label for="personalRate" class="col-md-6 col-sm-6 col-xs-6 form-control-label title"
+                               style="padding-left: 0%">Personal Rate:</label>
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+                            <input type="number" class="form-control" id="personalRate" ng-model="movie.personalRate"/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <h3 class="title"> Synopsis:</h3>
+                    {{movie.synopsis}}
+                </div>
+
+                <!-- We only show add button if we come from the research (so movie would have an IMDB id)  -->
+                <div class="row" style="margin-top: 5%; text-align: center" ng-show="movie.imdb_id">
+                    <input type="button" class="btn btn-success" value="Add to Library"
+                           ng-click="movieCtrl.addMovie()">
+                </div>
+                <!-- Oherwise we show a remove and Update button -->
+                <div class="row" style="margin-top: 5%; text-align: center" ng-hide="movie.imdb_id">
+                    <input type="submit" class="btn btn-success" value="Update"/>
+                    <input type="button" class="btn btn-danger" value="Remove from Library"
+                           ng-click="movieCtrl.deleteMovie(movie.id)"/>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- In production use:
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+-->
+<script src="bower_components/angular/angular.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
+
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="app.js"></script>
+<!--<script type="text/javascript" src="database.js"></script> -->
+<script type="text/javascript" src="movie.js"></script>
+<script src="view1/view1.js"></script>
+<script src="view2/view2.js"></script>
+<script type="text/javascript"
+        src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+<script src="components/version/version.js"></script>
+<script src="components/version/version-directive.js"></script>
+<script src="components/version/interpolate-filter.js"></script>
+</body>
+</html>

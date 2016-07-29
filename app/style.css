@@ -1,0 +1,48 @@
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+h3{
+    display: inline;
+}
+
+html,body{
+    background-color: #212121;
+    color: #EEEEEE;
+}
+
+.title{
+    color: #ffab00;
+}
+.table > thead > tr > th {
+    text-align: center;
+}
+.table > tbody > tr > td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.ng-invalid.ng-dirty{
+    border-color: red;
+}
+.ng-valid.ng-dirty{
+    border-color: blue;
+}
+
+#showMovieDetail .title{
+    text-decoration: underline;
+}
+#poster{
+    text-align: center;
+}
+
+#showMovieDetail > form> .row{
+    margin-bottom: 5%;
+}
+label.title{
+    font: 24px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
